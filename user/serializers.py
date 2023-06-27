@@ -1,13 +1,23 @@
+from django.core.validators import MinLengthValidator
 from rest_framework import serializers
 from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
 
 from .models import User
+from .validators import letter_validator, number_validator, special_char_validator
 
 
 class InputRegisterSerializer(serializers.Serializer):
     first_name = serializers.CharField(max_length=255)
     last_name = serializers.CharField(max_length=255)
-    phone_number = serializers.CharField(max_length=11)
+    phone_number = serializers.CharField(
+        validators=[
+            number_validator,
+            letter_validator,
+            special_char_validator,
+            MinLengthValidator(limit_value=11),
+        ],
+        max_length=11,
+    )
     email = serializers.EmailField()
     password = serializers.CharField(max_length=255)
     confirm_password = serializers.CharField(max_length=255)
