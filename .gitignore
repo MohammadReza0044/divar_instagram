@@ -134,4 +134,6 @@ Pipfile.lock
 Pipfile
 .idea/
 backend/media
+product/images
+media
 

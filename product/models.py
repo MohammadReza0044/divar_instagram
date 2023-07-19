@@ -10,12 +10,12 @@ class Product(models.Model):
     )
     DEVICE_STATUS_TYPE_CHOICES = (
         ("در حد نو", "در حد نو"),
-        (" کار کرده", "کار کرده "),
-        (" نیاز به تعمیر ", "نیاز به تعمیر  "),
+        ("کار کرده", "کار کرده"),
+        ("نیاز به تعمیر", "نیاز به تعمیر"),
     )
     ORIGINALITY_TYPE_CHOICES = (
         ("اصل", "اصل"),
-        ("غیر اصل ", "غیر اصل "),
+        ("غیر اصل", "غیر اصل"),
     )
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
