@@ -6,7 +6,7 @@ from user.models import User
 class Product(models.Model):
     CATEGORY_TYPE_CHOICES = (
         ("موبایل", "موبایل"),
-        ("تبلت ", "تبلت "),
+        ("تبلت", "تبلت"),
     )
     DEVICE_STATUS_TYPE_CHOICES = (
         ("در حد نو", "در حد نو"),
