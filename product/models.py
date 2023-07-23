@@ -50,3 +50,20 @@ class ProductPhoto(models.Model):
 
     class Meta:
         db_table = "Product Photos"
+
+
+class ProductComment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    text = models.TextField()
+    status = models.BooleanField(default=False)
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(db_index=True, auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = "Product Comment"
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return self.text

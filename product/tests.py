@@ -6,7 +6,7 @@ from rest_framework.test import APITestCase
 
 from user.models import User
 
-from .models import Product
+from .models import Product, ProductComment
 
 
 class ProductViewSetTestCase(APITestCase):
@@ -23,6 +23,12 @@ class ProductViewSetTestCase(APITestCase):
         file.name = "test.png"
         file.seek(0)
         return file
+
+    def test_list_object(self):
+        url = reverse("product:product-list")
+
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
 
     def test_create_object(self):
         photo_file = self.generate_photo_file()
@@ -71,3 +77,32 @@ class ProductViewSetTestCase(APITestCase):
 
         response = self.client.delete(url)
         self.assertEqual(response.status_code, 204)
+
+
+class ProductCommentViewSetTestCase(APITestCase):
+    def setUp(self):
+        self.user = User.objects.create(first_name="testuser")
+        self.product = Product.objects.create(
+            add_title="Test Object 1", price=1000, user=self.user
+        )
+
+    def test_list_comment(self):
+        url = reverse("product:product-comment-list", args=[self.product.pk])
+
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_create_comment(self):
+        url = reverse("product:product-comment-list")
+        data = {
+            "user": self.user.pk,
+            "product": self.product.pk,
+            "text": "Test Body for this comment",
+        }
+
+        response = self.client.post(url, data, format="json")
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(ProductComment.objects.count(), 1)
+        self.assertEqual(
+            ProductComment.objects.get().text, "Test Body for this comment"
+        )

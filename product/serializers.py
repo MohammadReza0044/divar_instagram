@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Product, ProductPhoto
+from .models import Product, ProductComment, ProductPhoto
 
 
 class PhotoSerializer(serializers.ModelSerializer):
@@ -68,3 +68,9 @@ class ProductSerializer(serializers.ModelSerializer):
                 )
 
         return super().update(instance, validated_data)
+
+
+class ProductCommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductComment
+        fields = ["id", "user", "product", "text"]
