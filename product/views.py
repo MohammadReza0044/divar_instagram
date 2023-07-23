@@ -1,3 +1,4 @@
+from rest_framework.generics import ListCreateAPIView
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
@@ -10,7 +11,7 @@ class ProductViewSet(ModelViewSet):
     serializer_class = ProductSerializer
 
 
-class ProductCommentViewSet(ModelViewSet):
+class ProductCommentViewSet(ListCreateAPIView):
     queryset = ProductComment.objects.all()
     serializer_class = ProductCommentSerializer
 

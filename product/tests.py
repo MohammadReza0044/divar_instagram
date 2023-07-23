@@ -93,7 +93,7 @@ class ProductCommentViewSetTestCase(APITestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_create_comment(self):
-        url = reverse("product:product-comment-list")
+        url = reverse("product:product-comment-create")
         data = {
             "user": self.user.pk,
             "product": self.product.pk,
