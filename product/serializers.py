@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Product, ProductComment, ProductPhoto
+from .models import Product, ProductComment, ProductLike, ProductPhoto
 
 
 class PhotoSerializer(serializers.ModelSerializer):
@@ -74,3 +74,9 @@ class ProductCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductComment
         fields = ["id", "user", "product", "text"]
+
+
+class ProductLikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductLike
+        fields = "__all__"

@@ -6,7 +6,7 @@ from rest_framework.test import APITestCase
 
 from user.models import User
 
-from .models import Product, ProductComment
+from .models import Product, ProductComment, ProductLike
 
 
 class ProductViewSetTestCase(APITestCase):
@@ -106,3 +106,32 @@ class ProductCommentViewSetTestCase(APITestCase):
         self.assertEqual(
             ProductComment.objects.get().text, "Test Body for this comment"
         )
+
+
+class ProductLikeViewSetTestCase(APITestCase):
+    def setUp(self):
+        self.user = User.objects.create(first_name="testuser")
+        self.product = Product.objects.create(
+            add_title="Test Object 1", price=1000, user=self.user
+        )
+
+    def test_create_like(self):
+        url = reverse("product:product-like-create")
+        data = {
+            "user": self.user.pk,
+            "product": self.product.pk,
+        }
+
+        response = self.client.post(url, data, format="json")
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(ProductLike.objects.count(), 1)
+
+    def test_user_like_list(self):
+        url = reverse("product:product-like-user-list")
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_product_like_list(self):
+        url = reverse("product:product-like-product-list", args=[self.product.pk])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)

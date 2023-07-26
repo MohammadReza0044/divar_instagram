@@ -67,3 +67,15 @@ class ProductComment(models.Model):
 
     def __str__(self):
         return self.text
+
+
+class ProductLike(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(db_index=True, auto_now_add=True)
+
+    class Meta:
+        db_table = "Product Like"
+
+    def __str__(self):
+        return self.user
