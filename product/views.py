@@ -49,11 +49,8 @@ class ProductLikeProductList(generics.ListAPIView):
         return queryset
 
 
-# class LikeList(generics.ListAPIView):
-#     serializer_class = LikeSerializer
-#     permission_classes = [IsAuthenticated]
-
-#     def get_queryset(self):
-#         product_id = self.kwargs['product_id']
-#         queryset = Like.objects.filter(product_id=product_id)
-#         return queryset
+class ProductLikeDeleteView(generics.RetrieveDestroyAPIView):
+    queryset = ProductLike.objects.all()
+    serializer_class = ProductLikeSerializer
+    lookup_field = "pk"
+    # permission_classes = [IsAuthenticated]

@@ -36,4 +36,9 @@ urlpatterns = [
         views.ProductLikeProductList.as_view(),
         name="product-like-product-list",
     ),
+    path(
+        "product-like-delete/<int:pk>/",
+        views.ProductLikeDeleteView.as_view(),
+        name="product-like-delete",
+    ),
 ]

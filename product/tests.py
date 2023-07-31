@@ -114,6 +114,10 @@ class ProductLikeViewSetTestCase(APITestCase):
         self.product = Product.objects.create(
             add_title="Test Object 1", price=1000, user=self.user
         )
+        self.like = ProductLike.objects.create(
+            user=self.user,
+            product=self.product,
+        )
 
     def test_create_like(self):
         url = reverse("product:product-like-create")
@@ -124,7 +128,7 @@ class ProductLikeViewSetTestCase(APITestCase):
 
         response = self.client.post(url, data, format="json")
         self.assertEqual(response.status_code, 201)
-        self.assertEqual(ProductLike.objects.count(), 1)
+        self.assertEqual(ProductLike.objects.count(), 2)
 
     def test_user_like_list(self):
         url = reverse("product:product-like-user-list")
@@ -135,3 +139,8 @@ class ProductLikeViewSetTestCase(APITestCase):
         url = reverse("product:product-like-product-list", args=[self.product.pk])
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
+
+    def test_product_like_delete(self):
+        url = reverse("product:product-like-delete", args=[self.like.pk])
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, 204)
