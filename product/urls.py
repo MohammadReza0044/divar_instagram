@@ -7,6 +7,9 @@ app_name = "product"
 
 router = routers.SimpleRouter()
 router.register("product", views.ProductViewSet, basename="product")
+router.register(
+    "product-favorite", views.ProductFavoriteViewSet, basename="product-favorite"
+)
 
 
 urlpatterns = [

@@ -6,7 +6,7 @@ from rest_framework.test import APITestCase
 
 from user.models import User
 
-from .models import Product, ProductComment, ProductLike
+from .models import Product, ProductComment, ProductFavorite, ProductLike
 
 
 class ProductViewSetTestCase(APITestCase):
@@ -142,5 +142,42 @@ class ProductLikeViewSetTestCase(APITestCase):
 
     def test_product_like_delete(self):
         url = reverse("product:product-like-delete", args=[self.like.pk])
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, 204)
+
+
+class ProductFavoriteViewSetTestCase(APITestCase):
+    def setUp(self):
+        self.user = User.objects.create(first_name="testuser")
+        self.user2 = User.objects.create(
+            first_name="testuser2", phone_number="09010000000"
+        )
+        self.client.force_authenticate(user=self.user)
+        self.product = Product.objects.create(
+            add_title="Test Object 1", price=1000, user=self.user
+        )
+        self.favorite = ProductFavorite.objects.create(
+            user=self.user,
+            product=self.product,
+        )
+
+    def test_create_favorite(self):
+        url = reverse("product:product-favorite-list")
+        data = {
+            "user": self.user2.pk,
+            "product": self.product.pk,
+        }
+
+        response = self.client.post(url, data, format="json")
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(ProductFavorite.objects.count(), 2)
+
+    def test_favorite_list(self):
+        url = reverse("product:product-favorite-list")
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_favorite_delete(self):
+        url = reverse("product:product-favorite-detail", args=[self.favorite.pk])
         response = self.client.delete(url)
         self.assertEqual(response.status_code, 204)

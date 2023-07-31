@@ -1,11 +1,12 @@
-from rest_framework import generics
+from rest_framework import generics, status
 from rest_framework.generics import ListCreateAPIView
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
-from .models import Product, ProductComment, ProductLike
+from .models import Product, ProductComment, ProductFavorite, ProductLike
 from .serializers import (
     ProductCommentSerializer,
+    ProductFavoriteSerializer,
     ProductLikeSerializer,
     ProductSerializer,
 )
@@ -54,3 +55,30 @@ class ProductLikeDeleteView(generics.RetrieveDestroyAPIView):
     serializer_class = ProductLikeSerializer
     lookup_field = "pk"
     # permission_classes = [IsAuthenticated]
+
+
+class ProductFavoriteViewSet(ModelViewSet):
+    serializer_class = ProductFavoriteSerializer
+    # permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        return ProductFavorite.objects.filter(user=user.pk)
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        # Check if the object already exists
+        user = serializer.validated_data.get("user")
+        product = serializer.validated_data.get("product")
+        if ProductFavorite.objects.filter(product=product, user=user).exists():
+            return Response(
+                {"detail": "Object already exists."}, status=status.HTTP_400_BAD_REQUEST
+            )
+
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(
+            serializer.data, status=status.HTTP_201_CREATED, headers=headers
+        )
